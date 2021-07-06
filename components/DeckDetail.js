@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {StyleSheet, View, Text} from 'react-native'
+import {StyleSheet, View, Text, Animated} from 'react-native'
 import {connect} from 'react-redux';
 import {white , purple, blue, gray} from "../utils/colors";
 import {removeEntry} from "../utils/api";
@@ -8,23 +8,8 @@ import TextButton from "./TextButton";
 
 
 class DeckDetail extends Component {
-
-    setTitle = (entryId) => {
-        if (!entryId) return;
-
-       
-
-        this.props.navigation.setOptions({
-            title: entryId
-        });
-    };
-
-    reset = () => {
-        const {remove, goBack, entryId} = this.props;
-        remove();
-        goBack();
-        removeEntry(entryId);
-    }
+    
+    
     addQuestion = () =>{
         this.props.navigation.navigate('AddQuestion', {
             title: this.props.deck.name
@@ -36,14 +21,11 @@ class DeckDetail extends Component {
         })
     }
 
-    // shouldComponentUpdate(nextProps, nextState, nextContext) {
-    //     return nextProps.metrics && !nextProps.metrics.today;
-    // }
 
     render() {
         const {key, deck} = this.props;
         const noCards = deck.questions.length;
-      //  this.setTitle(deckId);
+      
         return (
             <View style={styles.container}>
                 <View style={styles.item}>
@@ -122,9 +104,9 @@ const styles = StyleSheet.create({
 
 
 function mapStateToProps(state, {route}) {
-    console.log(route)
+    
     const {deckId} = route.params;
-    console.log(state)
+
 
     return ({
             

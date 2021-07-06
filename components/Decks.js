@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Text, StyleSheet, Platform, TouchableOpacity  , ScrollView } from 'react-native'
+import { View, Text, StyleSheet, Platform, TouchableOpacity  , ScrollView ,Animated} from 'react-native'
 import { connect } from 'react-redux'
 import { receiveDecks } from '../actions'
 import { fetchDecks } from '../utils/api'
@@ -9,6 +9,9 @@ import { white } from '../utils/colors'
 class Decks extends Component {
   state = {
     ready: false,
+    fadeAnim: new Animated.Value(5),
+    duration : 400
+    
 
   }
   componentDidMount () {
@@ -23,18 +26,42 @@ class Decks extends Component {
   handleNav = deck => {
     
     this.props.navigation.navigate("DeckDetail", { deckId: deck});
-  };
-  renderItem = ({item}) => (
-    <View style={styles.item}>
-      
-     
-         <TouchableOpacity
-            onPress={() => console.log('Pressed!')}
-          >
-            <Text>{item.name} adasd </Text>
-          </TouchableOpacity>
-    </View>
-  )
+  }
+  fadeOut = (deck) => {
+    // Will change fadeAnim value to 0 in 3 seconds
+    const {duration, fadeAnim} = this.state;
+    Animated.sequence([
+      Animated.timing(fadeAnim, {
+        toValue: 0,
+        duration: duration,
+        useNativeDriver: false
+      }),
+      Animated.timing(fadeAnim, {
+        toValue: 5,
+        duration: duration,
+        useNativeDriver: false
+      }),
+      Animated.timing(fadeAnim, {
+        toValue: 0,
+        duration: duration,
+        useNativeDriver: false
+      }),
+      Animated.timing(fadeAnim, {
+        toValue: 5,
+        duration: duration,
+        useNativeDriver: false
+      })
+
+    ])
+    .start(() => {
+      /* completion callback */
+      this.setState({
+        fadeAnim: new Animated.Value(5)
+      })
+        this.handleNav(deck);
+        
+    });
+  }
  
   render() {
     const { decks } = this.props
@@ -42,18 +69,31 @@ class Decks extends Component {
         if (decks) {
             return (
               <ScrollView>
+                <Animated.View
+                     style={[
+                     
+                     {
+                        // Bind opacity to animated value
+                         opacity: this.state.fadeAnim
+                     }
+                    ]}
+                   >
                 <View >
                 {Object.keys(decks).map(deck => (
-              <View key={deck} style={styles.item}>
-                <TouchableOpacity  onPress={()=>this.handleNav(deck)} >
+                <View key={deck} style={styles.item}>
+                  
+                <TouchableOpacity  onPress={()=>this.fadeOut(deck)} >
                 <Text style={styles.title}> {decks[deck].name} ({decks[deck].questions.length})</Text>
                 </TouchableOpacity>
                
-                {/* <DeckItem deck={decks[deck]} toDeck={this.handleNav} /> */}
+                
               </View>
+             
+              
             ))}
 
                 </View>
+                </Animated.View>
                 </ScrollView>
             )
         }

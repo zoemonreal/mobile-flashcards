@@ -39,7 +39,7 @@ class AddDeck extends Component {
         // todo: Clear local notification
     }
     handleNav = deck => {
-        console.log(deck)
+        
         this.props.navigation.navigate("DeckDetail", { deckId: deck});
       };
     handleChange = (title) => this.setState({ title })  

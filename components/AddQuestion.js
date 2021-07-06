@@ -29,7 +29,7 @@ class AddQuestion extends Component {
 
     submit = () => {
         const name = this.props.deckName; // 
-        console.log(name)
+        
 
         const question = this.state.question;
         const answer = this.state.answer;
@@ -131,7 +131,7 @@ const styles = StyleSheet.create({
 });
 
 function mapStateToProps(state, {route}) {
-    console.log(route)
+    
     const {title} = route.params;
     const deckName = title;
     return ({

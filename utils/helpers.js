@@ -1,8 +1,7 @@
 import React from "react";
 import { View, StyleSheet } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Notifications } from "expo";
-import * as Permissions from "expo-permissions";
+import * as Notifications from 'expo-notifications';
 
 
 
@@ -28,6 +27,7 @@ function createNotification () {
       sound: true,
     },
     android: {
+      
       sound: true,
       priority: 'high',
       sticky: false,
@@ -40,8 +40,11 @@ export function setLocalNotification () {
   AsyncStorage.getItem(NOTIFICATION_KEY)
     .then(JSON.parse)
     .then((data) => {
+      console.log(data);
+
       if (data === null) {
-        Permissions.askAsync(Permissions.NOTIFICATIONS)
+        console.log(data);
+         Notifications.requestPermissionsAsync()
           .then(({ status }) => {
             if (status === 'granted') {
               Notifications.cancelAllScheduledNotificationsAsync()
@@ -50,14 +53,30 @@ export function setLocalNotification () {
               tomorrow.setDate(tomorrow.getDate() + 1)
               tomorrow.setHours(20)
               tomorrow.setMinutes(0)
-
-              Notifications.scheduleLocalNotificationAsync(
-                createNotification(),
+              let testTime =60;
+              
+                 
+        
+              Notifications.scheduleNotificationAsync(
                 {
-                  time: tomorrow,
-                  repeat: 'day',
+                  content: createNotification(),
+                  trigger: {
+                    date: tomorrow,
+                    // second: 60, 
+                    
+                    repeats: true 
+  
+
+                  },
                 }
               )
+              Notifications.setNotificationHandler({
+                handleNotification: async () => ({
+                  shouldShowAlert: true,
+                  shouldPlaySound: false,
+                  shouldSetBadge: false,
+                }),
+              });
 
               AsyncStorage.setItem(NOTIFICATION_KEY, JSON.stringify(true))
             }

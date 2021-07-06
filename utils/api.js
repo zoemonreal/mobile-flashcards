@@ -32,8 +32,7 @@ export function submitDeck (name) {
   let deck = {}
   deck[name] = { name, questions: [] }
 
-  console.log(JSON.stringify(deck))
-  console.log(JSON.parse(JSON.stringify(deck)))
+  
   return AsyncStorage.mergeItem(MOBILE_STORAGE_KEY, JSON.stringify(deck))
 }
 

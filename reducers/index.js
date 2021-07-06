@@ -8,7 +8,7 @@ const decks = (state = null, action) => {
         ...action.decks
       };
     case ADD_DECK: {      
-      console.log(action)
+     
       const name = action.deck.name;
 
       return {
@@ -24,10 +24,7 @@ const decks = (state = null, action) => {
       const name = action.question.name;
       const question = action.question.question;
       const answer = action.question.answer;
-      console.log(action)
-
-      console.log(state['test'])
-      console.log(action.name === 'test')
+      
 
       return {
         ...state,
